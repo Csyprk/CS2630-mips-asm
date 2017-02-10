@@ -68,6 +68,6 @@ public class Phase1 {
 		}
 		
 	}
-        return null;
+        return tals;
     }
 }
