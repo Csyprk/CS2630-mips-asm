@@ -1,5 +1,20 @@
 package edu.uiowa.cs;
 
+
+/* MiniMa only needs to support the following instructions:
+instruction_id		Instruction
+1				addiu (might be pseudo instruction)
+2				addu
+3				or
+5				beq
+6				bne
+8				slt
+9				lui
+10				ori (might be pseudo instruction)
+100				blt (always a pseudo instruction)
+101				bge (always a pseudo instruction)
+*/
+
 public class Instruction {
     int instruction_id;   // id indicating the instruction
     int rd;            // register number
