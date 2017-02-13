@@ -73,13 +73,13 @@ public class Phase1 {
                 int low = imm&0x0000FFFF;
                 int high = imm&0xFFFF0000;
                 high = high>>16;
-                //lui $1, high
+                //lui $at, high
                 Instruction lui = new Instruction(9,0,0,1,high,0,0,
                                   instr.label_id,0);
-                //ori $1, $0, low
+                //ori $at, $0, low
                 Instruction ori = new Instruction(10,0,1,1,low,0,0,
                                   0, 0);
-                //addu r1, r2, $1
+                //addu r1, r2, $at
                 Instruction addu = new Instruction(2,instr.rt,instr.rs,1,0,0,0,
                                    0,0);
                 tals.add(lui);
@@ -95,7 +95,6 @@ public class Phase1 {
             /*
              * lui $at, Upper 16-bit immediate
              * ori $at, $at, lower 16-bit immediate
-             * addu rt, rs, $at
              */
             case 10: //ori $rt, $rs, imm  (might be immediate according to instructions)
             int imm2 = instr.immediate;
@@ -110,17 +109,13 @@ public class Phase1 {
                 //ori $1, $0, low
                 Instruction ori2 = new Instruction(10,0,1,1,low2,0,0,
                                   0, 0);
-                //addu r1, r2, $1
-                Instruction addu2 = new Instruction(2,instr.rt,instr.rs,1,0,0,0,
-                                   0,0);
+
                 tals.add(lui2);
                 tals.add(ori2);
-                tals.add(addu2);
                 break;
             }
             tals.add(instr);
             break;
-            //we don't need to translate, so fall through to default
             default:
             //instruction in tal
             tals.add(instr);
