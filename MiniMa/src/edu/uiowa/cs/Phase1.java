@@ -96,6 +96,13 @@ public class Phase1 {
              * lui $at, Upper 16-bit immediate
              * ori $at, $at, lower 16-bit immediate
              */
+                
+             // TEST CASE: ori $t0 $t1 65537
+             // Returns:
+             //lui $1, first16
+             //ori $1, $1, last 16
+             //or $t0, $t1, $1
+
             case 10: //ori $rt, $rs, imm  (might be immediate according to instructions)
             int imm2 = instr.immediate;
             if((imm2&0xFFFF)!=imm2){
@@ -109,9 +116,13 @@ public class Phase1 {
                 //ori $1, $0, low
                 Instruction ori2 = new Instruction(10,0,1,1,low2,0,0,
                                   0, 0);
+                
+                //or $rd, $rs, $rt
+                Instruction or2 = new Instruction(3, imm2.$rt, imm2.$rs, 1, 0, 0, 0, 0, 0)
 
                 tals.add(lui2);
                 tals.add(ori2);
+                tals.add(or2);
                 break;
             }
             tals.add(instr);
