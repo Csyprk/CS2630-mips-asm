@@ -118,7 +118,7 @@ public class Phase1 {
                                   0, 0);
                 
                 //or $rd, $rs, $rt
-                Instruction or2 = new Instruction(3, imm2.$rt, imm2.$rs, 1, 0, 0, 0, 0, 0);
+                Instruction or2 = new Instruction(3, instr.rt, instr.rs, 1, 0, 0, 0, 0, 0);
 
                 tals.add(lui2);
                 tals.add(ori2);
