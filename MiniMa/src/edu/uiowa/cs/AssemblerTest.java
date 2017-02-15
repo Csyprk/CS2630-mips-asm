@@ -81,7 +81,87 @@ public class AssemblerTest {
         @Test
         public void test2() {
             /* Fill in your additional test case here! */
-
+	    List<Instruction> input = new LinkedList<Instruction>();
+	    //ori with small immediate
+	    //label1:ori $t0, $t1, 0xBEEF
+	    input.add(new Instruction(10,0,8,9,0xBEEF,0,0,1,0));
+	    //ori with large immediate
+	    //ori $t0, $t1, 0xC0FFEE
+	    input.add(new Instruction(10,0,8,9,0xC0FFEE,0,0,0,0));
+	    //addi with small immediate
+	    //addi $t0,$t1,0x2017
+	    input.add(new Instruction(1,0,8,9,0x2017,0,0,0,0));
+	    //addi with large immediate
+	    //addi $t0,$t1,0xBADCA7
+	    input.add(new Instruction(1,0,8,9,0xBADCA7,0,0,0,0));
+	    //bgt $t0,$t1,label1
+	    input.add(new Instruction(101,0,8,9,0,0,0,0,1));
+	    //branch to the same instruction
+	    //inf:beq $0,$0,inf
+	    input.add(new Instruction(5,0,0,0,0,0,0,2,2));
             //testHelper(...);
+	    //Phase1
+	    Instruction[] phase1_expected = {
+		//label1:ori $t0, $t1, 0xBEEF
+		new Instruction(10,0,8,9,0xBEEF,0,0,1,0),
+		//lui $1, 0x00C0
+		new Instruction(9,0,1,0,0x00C0,0,0,0,0),
+		//ori $1, $1, 0xFFEE
+		new Instruction(10,0,1,1,0xFFEE,0,0,0,0),
+		//or $8, $9, $1
+		new Instruction(3,1,8,9,0,0,0,0,0),
+		//addiu $8, $9, 0x2017
+		new Instruction(1,0,8,9,0x2017,0,0,0,0),
+		//lui $1, $00BA
+		new Instruction(9,0,1,0,0x00BA,0,0,0,0),	       
+		//ori $1, $1, $DCA7
+		new Instruction(10,0,1,1,0xDCA7,0,0,0,0),
+		//addu $8, $9, $1
+		new Instruction(2,1,8,9,0,0,0,0,0),
+		//slt $1, $9, $8
+		new Instruction(8,8,1,9,0,0,0,0,0),
+		//bne $1, $0, label1
+		new Instruction(6,0,1,0,0,0,0,0,1),
+		//inf:beq $0, $0, inf
+		new Instruction(5,0,0,0,0,0,0,2,2)
+	    };
+	    Instruction[] phase2_expected = {
+		//label1:ori $t0, $t1, 0xBEEF
+		new Instruction(10,0,8,9,0xBEEF,0,0,1,0),
+		//lui $1, 0x00C0
+		new Instruction(9,0,1,0,0x00C0,0,0,0,0),
+		//ori $1, $1, 0xFFEE
+		new Instruction(10,0,1,1,0xFFEE,0,0,0,0),
+		//or $8, $9, $1
+		new Instruction(3,1,8,9,0,0,0,0,0),
+		//addiu $8, $9, 0x2017
+		new Instruction(1,0,8,9,0x2017,0,0,0,0),
+		//lui $1, $00BA
+		new Instruction(9,0,1,0,0x00BA,0,0,0,0),	       
+		//ori $1, $1, $DCA7
+		new Instruction(10,0,1,1,0xDCA7,0,0,0,0),
+		//addu $8, $9, $1
+		new Instruction(2,1,8,9,0,0,0,0,0),
+		//slt $1, $9, $8
+		new Instruction(8,8,1,9,0,0,0,0,0),
+		//bne $1, $0, label1
+		new Instruction(6,0,1,0,0xFFFFFFF6,0,0,0,1),
+		//inf:beq $0, $0, inf
+		new Instruction(5,0,0,0,0xFFFFFFFF,0,0,2,2)
+	    };
+	    Integer[] phase3_expected = {
+		//taken from mars
+		0x3528BEEF,
+		0x3C0100C0,
+		0x3421FFEE,
+		0x01214025,
+		0x25282017,
+		0x3C0100BA,
+		0x3421DCA7,
+		0x01214021,
+		0x0128082A,
+		0x1420FFF6,
+		0x1000FFFF
+	    };
         }
 }
