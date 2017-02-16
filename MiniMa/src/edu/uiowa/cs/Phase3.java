@@ -48,7 +48,7 @@ public class Phase3 {
     case 10://ori
         return 13;
     default://should not be reached on valid inputs
-        return 0;
+        throw new AssertionError("unreachable code reached");
     }
     }
     private static String extendLength(int base, int desiredLength)
